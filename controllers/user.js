@@ -51,13 +51,7 @@ exports.insertAdd = async (req,res)=>{
     }
 }
 
-const verify = (add,hash)=>{
-    // find the address  
-    // check the hash
-    // check timestamp for 5 mins
 
-    // return true or false
-}
 
 exports.logout = async (req,res) => {
     try{
@@ -179,6 +173,13 @@ exports.allUsers = async(req,res)=>{
     }
 }
 
+exports.something = async(req,res)=>{
+    res.json({
+        isSuccessfull:true,
+        message:`accessed`
+    })
+}
+
 exports.isLoggedIn = async (req,res) => {
     try{
         console.log("body",req.body)
@@ -188,35 +189,42 @@ exports.isLoggedIn = async (req,res) => {
             })
             if(user.length){
 
-                if((Date.now()-user[0].last_auth_timestamp <= 10000) && req.body && req.body.hash && user[0].last_hash!= "" && req.body.hash === user[0].last_hash){
+                console.log("time differnce ",Date.now()-user[0].last_auth_timestamp )
+                console.log()
 
-                    res.json({
-                        isSuccessfull:true,
-                        message:"User found in whitelist",
-                        loggedIn:user[0].loggedIn
-                    })
+                if((Date.now()-user[0].last_auth_timestamp <= 30000) && req.body && req.body.hash && user[0].last_hash!= "" && req.body.hash === user[0].last_hash){
+
+                    // res.json({
+                    //     isSuccessfull:true,
+                    //     message:"User found in whitelist",
+                    //     loggedIn:user[0].loggedIn
+                    // })
+                    return true;
                 }
                 else{
-                    res.json({
-                        isSuccessfull:false,
-                        message:"login again",
-                        loggedIn:false
-                    })
+                    // res.json({
+                    //     isSuccessfull:false,
+                    //     message:"login again",
+                    //     loggedIn:false
+                    // })
+                    return false;
                 }
             }
             else{
-                res.json({
-                    isSuccessfull:false,
-                    message:"User not found",
-                    user:null
-                })
+                // res.json({
+                //     isSuccessfull:false,
+                //     message:"User not found",
+                //     user:null
+                // })
+                return false;
             }
         }
      }
     catch(err){
-        res.json({
-            isSuccessfull:false,
-            message:`Internal server error`
-        })
+        // res.json({
+        //     isSuccessfull:false,
+        //     message:`Internal server error`
+        // })
+        return false;
     }
 }
